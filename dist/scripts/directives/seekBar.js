@@ -8,6 +8,7 @@
      offsetXPercent = Math.min(1, offsetXPercent);
      return offsetXPercent;
  };
+       
        return {
          templateUrl: '/templates/directives/seek_bar.html',
          replace: true,
@@ -48,28 +49,29 @@
          };
            
             scope.trackThumb = function() {
-              $document.bind('mousemove.thumb', function(event) {
-              var percent = calculatePercent(seekBar, event);
-              scope.$apply(function() {
+          $document.bind('mousemove.thumb', function(event) {
+            var percent = calculatePercent(seekBar, event);
+            scope.$apply(function() {
               scope.value = percent * scope.max;
-                notifyOnChange(scope.value);
-         });
-     });
-                  
+              notifyOnChange(scope.value);
+            });
+          });
+
+          $document.bind('mouseup.thumb', function() {
+            $document.unbind('mousemove.thumb');
+            $document.unbind('mouseup.thumb');
+          });
+        };
+
         var notifyOnChange = function(newValue) {
           if (typeof scope.onChange === 'function') {
             scope.onChange({value: newValue});
-     }
- };
- 
-     $document.bind('mouseup.thumb', function() {
-         $document.unbind('mousemove.thumb');
-         $document.unbind('mouseup.thumb');
-     });
- };
-         }
-     };
-     }
+          }
+        };
+      }
+    };
+  };
+  
      angular
          .module('blocJams')
          .directive('seekBar', ['$document', seekBar]);
